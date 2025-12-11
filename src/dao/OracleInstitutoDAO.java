@@ -10,8 +10,11 @@ public class OracleInstitutoDAO implements InstitutoDAO {
 
     public OracleInstitutoDAO() {
         try {
-            con = DriverManager.getConnection("jdbc:oracle:thin:oracle/Oracle123@localhost:1521/XEPDB1");
-
+            con = DriverManager.getConnection(
+                "jdbc:oracle:thin:@localhost:1521/XEPDB1",
+                "oracle",
+                "Oracle123"
+            );
         } catch (SQLException e) {
             System.out.println("Error conexión Oracle");
         }
