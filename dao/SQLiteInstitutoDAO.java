@@ -4,42 +4,32 @@ import java.sql.*;
 import model.Alumno;
 import model.Curso;
 
-public class OracleInstitutoDAO implements InstitutoDAO {
+public class SQLiteInstitutoDAO implements InstitutoDAO {
 
+    private static final String DATABASE_NAME = "mybasedatos.db";
     private Connection con;
 
-    public OracleInstitutoDAO() {
-        try {
-            con = DriverManager.getConnection(
-                "jdbc:oracle:thin:@localhost:1521/XEPDB1",
-                "oracle",
-                "Oracle123"
-            );
+    public SQLiteInstitutoDAO() {
+    try {
+            con = DriverManager.getConnection("jdbc:sqlite:" + DATABASE_NAME);
+            try (Statement st = con.createStatement()) {
+                st.execute("PRAGMA foreign_keys = ON");
+            }
         } catch (SQLException e) {
-            System.out.println("Error conexión Oracle");
+            System.out.println("Error conexión SQLite: " + e.getMessage());
         }
     }
 
     @Override
     public void crearTablas() {
         try (Statement st = con.createStatement()) {
-
-            try { st.execute("DROP TABLE cursos"); } catch (SQLException e) {}
-            try { st.execute("DROP TABLE alumnos"); } catch (SQLException e) {}
-
-            st.execute(
-                "CREATE TABLE alumnos (" +
-                "id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, " +
-                "nombre VARCHAR2(100), edad NUMBER)"
-            );
-
-            st.execute(
-                "CREATE TABLE cursos (" +
-                "id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, " +
-                "nombre VARCHAR2(100), id_alumno NUMBER, " +
-                "FOREIGN KEY(id_alumno) REFERENCES alumnos(id))"
-            );
-
+            st.execute("CREATE TABLE IF NOT EXISTS alumnos (" +
+                       "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                       "nombre TEXT, edad INTEGER)");
+            st.execute("CREATE TABLE IF NOT EXISTS cursos (" +
+                       "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                       "nombre TEXT, id_alumno INTEGER, " +
+                       "FOREIGN KEY(id_alumno) REFERENCES alumnos(id))");
         } catch (SQLException e) {
             System.out.println("Error creando tablas");
         }
@@ -99,14 +89,12 @@ public class OracleInstitutoDAO implements InstitutoDAO {
     public void listarAlumnos() {
         try (Statement st = con.createStatement();
              ResultSet rs = st.executeQuery("SELECT * FROM alumnos")) {
-
             while (rs.next()) {
                 System.out.println(
                     rs.getInt("id") + " " +
                     rs.getString("nombre") + " " +
                     rs.getInt("edad"));
             }
-
         } catch (SQLException e) {
             System.out.println("Error listando alumnos");
         }
@@ -117,13 +105,12 @@ public class OracleInstitutoDAO implements InstitutoDAO {
         try (Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(
                  "SELECT a.nombre, c.nombre FROM alumnos a " +
-                 "LEFT JOIN cursos c ON a.id = c.id_alumno")) {
+                 "LEFT JOIN cursos c ON a.id=c.id_alumno")) {
 
             while (rs.next()) {
                 System.out.println(
                     rs.getString(1) + " - " + rs.getString(2));
             }
-
         } catch (SQLException e) {
             System.out.println("Error listando relación");
         }
