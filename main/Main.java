@@ -5,6 +5,7 @@ import java.util.Scanner;
 import model.Servidor;
 import model.Web;
 
+// Sistema Hosting Principal
 public class Main {
     
     private static final Scanner sc = new Scanner(System.in);
@@ -26,7 +27,7 @@ public class Main {
         System.out.println("\n¡Hasta luego!");
         sc.close();
     }
-    
+    // Menú BD
     private static HostingDAO seleccionarConexion() {
         System.out.println("MENÚ 1: TIPO DE CONEXIÓN");
         System.out.println("1. Mock (simulación)");
@@ -48,7 +49,9 @@ public class Main {
             }
         };
     }
-    
+
+
+    // Menú operaciones
     private static boolean menuOperaciones() {
         System.out.println("\nMENÚ 2: OPERACIONES");
         System.out.println("a) Crear tablas");
@@ -79,6 +82,10 @@ public class Main {
         return true;
     }
     
+
+    //
+
+    // Inserta servidor test
     private static void insertarServidor() {
         dao.insertarServidor(
             new Servidor(
@@ -91,7 +98,9 @@ public class Main {
         System.out.println("Servidor 'IronMan-Server' insertado.");
     }
 
+    // Inserta web test
     private static void insertarWeb() {
+        
         dao.insertarWeb(
             new Web(
                 1,
@@ -103,7 +112,9 @@ public class Main {
         System.out.println("Web 'balbe.xyz' insertada en IronMan-Server.");
     }
 
+    // Actualiza servidor test
     private static void actualizarServidor() {
+        
         dao.actualizarServidor(
             new Servidor(
                 1,
@@ -115,6 +126,7 @@ public class Main {
         System.out.println("Servidor actualizado correctamente.");
     }
 
+    // Actualiza web test
     private static void actualizarWeb() {
         dao.actualizarWeb(
             new Web(
@@ -127,10 +139,12 @@ public class Main {
         System.out.println("Web actualizada correctamente.");
     }
 
+    // Busca servidor test
     private static void buscarServidor() {
         dao.buscarServidorPorId(1);
     }
 
+    // Lee entero
     private static int leerInt() {
         while (true) {
             try {

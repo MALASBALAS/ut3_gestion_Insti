@@ -26,14 +26,55 @@ src/
 ## Base de Datos
 
 **Tabla 1: Servidor**
-- id_Servidor (PK)
-- nombre
-- edad
+- id (PK) - Identificador único
+- nombre - Nombre del servidor
+- ip - Dirección IP del servidor
+- ubicacion - Ubicación física del servidor
 
-**Tabla 2: WebS**
-- id_Web (PK)
-- nombre
-- id_Servidor (FK → Servidor)
+**Tabla 2: Webs**
+- id (PK) - Identificador único
+- dominio - Nombre de dominio
+- lenguaje - Lenguaje/Tecnología utilizada
+- idServidor (FK → Servidor.id) - Referencia al servidor que aloja la web
+
+### Diagrama ER (Entity-Relationship)
+
+```mermaid
+erDiagram
+    SERVIDOR ||--o{ WEBS : aloja
+    SERVIDOR {
+        int id PK
+        string nombre
+        string ip
+        string ubicacion
+    }
+    WEBS {
+        int id PK
+        string dominio
+        string lenguaje
+        int idServidor FK
+    }
+```
+
+## Datos de Ejemplo Automáticos
+
+El sistema incluye datos personalizados para pruebas que se insertan automáticamente:
+
+### Servidor Insertado
+| Campo | Valor |
+|-------|-------|
+| **ID** | 1 |
+| **Nombre** | IronMan-Server |
+| **IP** | 192.168.1.19 |
+| **Ubicación** | Madrid - PC Jarvis |
+
+### Web Insertada
+| Campo | Valor |
+|-------|-------|
+| **ID** | 1 |
+| **Dominio** | balbe.xyz |
+| **Lenguaje** | React / MariaDB |
+| **Servidor asociado** | 1 (IronMan-Server) |
 
 ## Cómo Compilar y Ejecutar
 

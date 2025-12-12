@@ -1,5 +1,6 @@
 package model;
 
+// Entidad Web
 public class Web {
     private int id;
     private String dominio;

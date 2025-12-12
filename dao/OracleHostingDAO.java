@@ -4,10 +4,12 @@ import java.sql.*;
 import model.Servidor;
 import model.Web;
 
+// DAO Oracle
 public class OracleHostingDAO implements HostingDAO {
 
     private Connection con;
 
+    // Conecta BD Oracle
     public OracleHostingDAO() {
         try {
             String host = System.getenv().getOrDefault("ORACLE_HOST", "192.168.56.101");
@@ -27,6 +29,7 @@ public class OracleHostingDAO implements HostingDAO {
 
     @Override
     public void crearTablas() {
+        // Crea tablas BD
         try (Statement st = con.createStatement()) {
 
             try { st.execute("DROP TABLE Webs"); } catch (SQLException e) {}
@@ -60,6 +63,7 @@ public class OracleHostingDAO implements HostingDAO {
 
     @Override
     public void insertarServidor(Servidor s) {
+        // Inserta servidor BD
         try (PreparedStatement ps =
             con.prepareStatement("INSERT INTO Servidor(nombre, ip, ubicacion) VALUES (?, ?, ?)")) {
 
@@ -75,6 +79,7 @@ public class OracleHostingDAO implements HostingDAO {
 
     @Override
     public void insertarWeb(Web w) {
+        // Inserta web BD
         try (PreparedStatement ps =
             con.prepareStatement("INSERT INTO Webs(dominio, lenguaje, idServidor) VALUES (?, ?, ?)")) {
 
@@ -90,6 +95,7 @@ public class OracleHostingDAO implements HostingDAO {
 
     @Override
     public void actualizarServidor(Servidor s) {
+        // Actualiza servidor BD
         try (PreparedStatement ps =
             con.prepareStatement("UPDATE Servidor SET nombre=?, ip=?, ubicacion=? WHERE id=?")) {
 
@@ -106,6 +112,7 @@ public class OracleHostingDAO implements HostingDAO {
 
     @Override
     public void actualizarWeb(Web w) {
+        // Actualiza web BD
         try (PreparedStatement ps =
             con.prepareStatement("UPDATE Webs SET dominio=?, lenguaje=?, idServidor=? WHERE id=?")) {
 
@@ -122,6 +129,7 @@ public class OracleHostingDAO implements HostingDAO {
 
     @Override
     public void listarServidores() {
+        // Lista todos servidores
         try (Statement st = con.createStatement();
              ResultSet rs = st.executeQuery("SELECT * FROM Servidor")) {
 
@@ -141,6 +149,7 @@ public class OracleHostingDAO implements HostingDAO {
 
     @Override
     public void listarServidoresConWebs() {
+        // Lista servidores webs
         try (Statement st = con.createStatement();
              ResultSet rs = st.executeQuery("""
                 SELECT s.nombre AS servidor, w.dominio AS web
@@ -159,6 +168,7 @@ public class OracleHostingDAO implements HostingDAO {
 
     @Override
     public void buscarServidorPorId(int id) {
+        // Busca por ID
         try (PreparedStatement ps =
              con.prepareStatement("SELECT * FROM Servidor WHERE id=?")) {
 

@@ -1,5 +1,6 @@
 package model;
 
+// Entidad Servidor
 public class Servidor {
     private int id;
     private String nombre;

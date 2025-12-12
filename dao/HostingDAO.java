@@ -3,6 +3,7 @@ package dao;
 import model.Servidor;
 import model.Web;
 
+// Interfaz DAO
 public interface HostingDAO {
     void crearTablas();
 

@@ -4,11 +4,13 @@ import java.sql.*;
 import model.Servidor;
 import model.Web;
 
+// DAO SQLite
 public class SQLiteHostingDAO implements HostingDAO {
 
     private static final String DATABASE_NAME = "serversdatabase.db";
     private Connection con;
 
+    // Conecta BD SQLite
     public SQLiteHostingDAO() {
         try {
             con = DriverManager.getConnection("jdbc:sqlite:" + DATABASE_NAME);
@@ -22,6 +24,7 @@ public class SQLiteHostingDAO implements HostingDAO {
 
     @Override
     public void crearTablas() {
+        // Crea tablas BD
         try (Statement st = con.createStatement()) {
 
             st.execute("DROP TABLE IF EXISTS Webs");
@@ -55,6 +58,7 @@ public class SQLiteHostingDAO implements HostingDAO {
 
     @Override
     public void insertarServidor(Servidor s) {
+        // Inserta servidor BD
         try (PreparedStatement ps =
              con.prepareStatement("INSERT INTO Servidor(nombre, ip, ubicacion) VALUES (?,?,?)")) {
 
@@ -70,6 +74,7 @@ public class SQLiteHostingDAO implements HostingDAO {
 
     @Override
     public void insertarWeb(Web w) {
+        // Inserta web BD
         try (PreparedStatement ps =
              con.prepareStatement("INSERT INTO Webs(dominio, lenguaje, idServidor) VALUES (?,?,?)")) {
 
@@ -85,6 +90,7 @@ public class SQLiteHostingDAO implements HostingDAO {
 
     @Override
     public void actualizarServidor(Servidor s) {
+        // Actualiza servidor BD
         try (PreparedStatement ps =
              con.prepareStatement("UPDATE Servidor SET nombre=?, ip=?, ubicacion=? WHERE id=?")) {
 
@@ -101,6 +107,7 @@ public class SQLiteHostingDAO implements HostingDAO {
 
     @Override
     public void actualizarWeb(Web w) {
+        // Actualiza web BD
         try (PreparedStatement ps =
              con.prepareStatement("UPDATE Webs SET dominio=?, lenguaje=?, idServidor=? WHERE id=?")) {
 
@@ -117,6 +124,7 @@ public class SQLiteHostingDAO implements HostingDAO {
 
     @Override
     public void listarServidores() {
+        // Lista todos servidores
         try (Statement st = con.createStatement();
              ResultSet rs = st.executeQuery("SELECT * FROM Servidor")) {
 
@@ -136,6 +144,7 @@ public class SQLiteHostingDAO implements HostingDAO {
 
     @Override
     public void listarServidoresConWebs() {
+        // Lista servidores webs
         try (Statement st = con.createStatement();
              ResultSet rs = st.executeQuery("""
                 SELECT s.nombre, w.dominio
@@ -156,6 +165,7 @@ public class SQLiteHostingDAO implements HostingDAO {
 
     @Override
     public void buscarServidorPorId(int id) {
+        // Busca por ID
         try (PreparedStatement ps =
              con.prepareStatement("SELECT * FROM Servidor WHERE id=?")) {
 
