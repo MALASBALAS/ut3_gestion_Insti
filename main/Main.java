@@ -2,19 +2,17 @@ package main;
 
 import dao.*;
 import java.util.Scanner;
-import model.Alumno;
-import model.Curso;
+import model.Servidor;
+import model.Web;
 
 public class Main {
     
     private static final Scanner sc = new Scanner(System.in);
-    private static InstitutoDAO dao;
+    private static HostingDAO dao;
     
     public static void main(String[] args) {
-        System.out.println("\n");
-        System.out.println("SISTEMA GESTIÓN INSTITUTO");
-        System.out.println("2DAM - Acceso a Datos - UT3");
-        System.out.println("\n");
+        System.out.println("\nSISTEMA GESTIÓN Hosting");
+        System.out.println("2DAM - Acceso a Datos - UT3\n");
         
         dao = seleccionarConexion();
         
@@ -29,7 +27,7 @@ public class Main {
         sc.close();
     }
     
-    private static InstitutoDAO seleccionarConexion() {
+    private static HostingDAO seleccionarConexion() {
         System.out.println("MENÚ 1: TIPO DE CONEXIÓN");
         System.out.println("1. Mock (simulación)");
         System.out.println("2. SQLite");
@@ -39,76 +37,104 @@ public class Main {
         
         int opcion = leerInt();
         
-        switch(opcion) {
-            case 1: return new MockInstitutoDAO();
-            case 2: return new SQLiteInstitutoDAO();
-            case 3: return new OracleInstitutoDAO();
-            case 0: return null;
-            default:
+        return switch (opcion) {
+            case 1 -> new MockHostingDAO();
+            case 2 -> new SQLiteHostingDAO();
+            case 3 -> new OracleHostingDAO();
+            case 0 -> null;
+            default -> {
                 System.out.println("Opción inválida");
-                return seleccionarConexion();
-        }
+                yield seleccionarConexion();
+            }
+        };
     }
     
     private static boolean menuOperaciones() {
         System.out.println("\nMENÚ 2: OPERACIONES");
         System.out.println("a) Crear tablas");
-        System.out.println("b) Insertar alumno");
-        System.out.println("c) Insertar curso");
-        System.out.println("d) Actualizar alumno");
-        System.out.println("e) Actualizar curso");
-        System.out.println("f) Listar alumnos");
-        System.out.println("g) Listar alumnos con cursos");
-        System.out.println("h) Buscar alumno por ID");
+        System.out.println("b) Insertar Servidor");
+        System.out.println("c) Insertar Web");
+        System.out.println("d) Actualizar Servidor");
+        System.out.println("e) Actualizar Web");
+        System.out.println("f) Listar Servidores");
+        System.out.println("g) Listar Servidores con Webs");
+        System.out.println("h) Buscar Servidor por ID");
         System.out.println("0) Salir");
         System.out.print("\nOpción: ");
         
         String opcion = sc.nextLine().toLowerCase();
         
         switch(opcion) {
-            case "a": dao.crearTablas(); break;
-            case "b": insertarAlumno(); break;
-            case "c": insertarCurso(); break;
-            case "d": actualizarAlumno(); break;
-            case "e": actualizarCurso(); break;
-            case "f": dao.listarAlumnos(); break;
-            case "g": dao.listarAlumnosConCursos(); break;
-            case "h": buscarAlumno(); break;
-            case "0": return false;
-            default: System.out.println("Opción inválida");
+            case "a" -> dao.crearTablas();
+            case "b" -> insertarServidor();
+            case "c" -> insertarWeb();
+            case "d" -> actualizarServidor();
+            case "e" -> actualizarWeb();
+            case "f" -> dao.listarServidores();
+            case "g" -> dao.listarServidoresConWebs();
+            case "h" -> buscarServidor();
+            case "0" -> { return false; }
+            default -> System.out.println("Opción inválida");
         }
         return true;
     }
     
-    private static void insertarAlumno() {
-    dao.insertarAlumno(new Alumno(1, "Alvaro Balas", 19));
-    System.out.println("Alumno Álvaro Balas insertado");
+    private static void insertarServidor() {
+        dao.insertarServidor(
+            new Servidor(
+                1,
+                "IronMan-Server",
+                "192.168.1.19",
+                "Madrid - PC Jarvis"
+            )
+        );
+        System.out.println("Servidor 'IronMan-Server' insertado.");
     }
 
-    private static void insertarCurso() {
-        dao.insertarCurso(new Curso(1, "Acceso a Datos", 1));
-        System.out.println("Curso 'Acceso a Datos' insertado para Álvaro Balas");
+    private static void insertarWeb() {
+        dao.insertarWeb(
+            new Web(
+                1,
+                "balbe.xyz",
+                "React / MariaDB",
+                1
+            )
+        );
+        System.out.println("Web 'balbe.xyz' insertada en IronMan-Server.");
     }
 
-    private static void actualizarAlumno() {
-        dao.actualizarAlumno(new Alumno(1, "Alvaro Balas Jimenez", 20));
-        System.out.println("Alumno actualizado");
+    private static void actualizarServidor() {
+        dao.actualizarServidor(
+            new Servidor(
+                1,
+                "IronMan-Server v2",
+                "192.168.19.3",
+                "Madrid - Cuarto técnico"
+            )
+        );
+        System.out.println("Servidor actualizado correctamente.");
     }
 
-    private static void actualizarCurso() {
-        dao.actualizarCurso(new Curso(1, "Programación Multimedia", 1));
-        System.out.println("Curso actualizado");
+    private static void actualizarWeb() {
+        dao.actualizarWeb(
+            new Web(
+                1,
+                "academyliquidity.com",
+                "NodeJS / React",
+                1
+            )
+        );
+        System.out.println("Web actualizada correctamente.");
     }
 
-    private static void buscarAlumno() {
-        dao.buscarAlumnoPorId(1);
+    private static void buscarServidor() {
+        dao.buscarServidorPorId(1);
     }
-    
+
     private static int leerInt() {
         while (true) {
             try {
-                int num = Integer.parseInt(sc.nextLine());
-                return num;
+                return Integer.parseInt(sc.nextLine());
             } catch (NumberFormatException e) {
                 System.out.print("Número inválido. Intenta de nuevo: ");
             }
